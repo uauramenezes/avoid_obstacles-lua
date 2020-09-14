@@ -1,10 +1,7 @@
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 750
+HEIGHT = 550
 
 function love.load()
-    -- seed the RNG so that calls to random are always random
-    math.randomseed(os.time())
-
     -- initialize text fonts
     font = love.graphics.newFont('mono.ttf', 15)
     love.graphics.setFont(font)
@@ -39,14 +36,17 @@ function love.load()
     end
 
     -- create the walls, the player and obstacles 
-    wallLeft = createWalls(200)
-    wallRight = createWalls(600)
+    wallLeft = createWalls(WIDTH / 4 - 2)
+    wallRight = createWalls(WIDTH * (3 / 4) - 2)
 
-    player = createElements(WIDTH / 2 - 25, 525, 1)
+    player = createElements(WIDTH / 2 - 25, 475, 1)
 
-    obstacle1 = createElements(250, 300, 1)
-    obstacle2 = createElements(350, 300, 2)
-    obstacle3 = createElements(450, 300, 3)
+    obstacle = {}
+
+    for i = 1, 3, 1 do
+        obstacle[i] = createElements((i * 150) + 50, 300, 1)
+    end
+
 end
 
 function love.update()
@@ -54,5 +54,14 @@ function love.update()
 end
 
 function love.draw()
+    love.graphics.rectangle('fill', player.x, player.y, player.width, player.height)
+
     
+    love.graphics.rectangle('fill', wallLeft.x, wallLeft.y, wallLeft.width, wallLeft.height)
+    love.graphics.rectangle('fill', wallRight.x, wallRight.y, wallRight.width, wallRight.height)
+
+    for i = 1, 3, 1 do
+        love.graphics.rectangle('fill', obstacle[i].x, obstacle[i].y, obstacle[i].width, obstacle[i].height)
+    end
+
 end
