@@ -22,17 +22,37 @@ function love.load()
     end
 
     -- function to create elements objects
-    function createElements(x, y, line)
+    function createElements(x, y)
         local this = 
         {
             x = x,
             y = y,
             width = 50,
             height = 50,
-            line = line
         }
 
         return this
+    end
+
+    -- get random x positions to obstacles
+    function getPositionX2()
+        local random = love.math.random(2)
+        if random == 1 then
+            return 275
+        else
+            return 425
+        end
+    end
+    
+    function getPositionX3()
+        local random = love.math.random(3)
+        if random == 1 then
+            return 200
+        elseif random == 2 then
+            return 350
+        else
+            return 500
+        end
     end
 
     -- create the walls, the player and obstacles 
@@ -42,9 +62,12 @@ function love.load()
     player = createElements(WIDTH / 2 - 25, 475, 1)
 
     obstacle = {}
-
-    for i = 1, 3, 1 do
-        obstacle[i] = createElements((i * 150) + 50, 300, 1)
+    for i = 1, 5, 1 do
+        if i <= 2 then
+            obstacle[i] = createElements(getPositionX2(), 150)
+        else
+            obstacle[i] = createElements(getPositionX3(), 300)
+        end
     end
 
 end
@@ -60,7 +83,7 @@ function love.draw()
     love.graphics.rectangle('fill', wallLeft.x, wallLeft.y, wallLeft.width, wallLeft.height)
     love.graphics.rectangle('fill', wallRight.x, wallRight.y, wallRight.width, wallRight.height)
 
-    for i = 1, 3, 1 do
+    for i = 1, 5, 1 do
         love.graphics.rectangle('fill', obstacle[i].x, obstacle[i].y, obstacle[i].width, obstacle[i].height)
     end
 
