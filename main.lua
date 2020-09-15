@@ -34,22 +34,17 @@ function love.load()
         return this
     end
 
-    -- get random x positions to obstacles
-    function getPositionX2()
-        local random = love.math.random(2)
-        if random == 1 then
-            return 275
-        else
-            return 425
-        end
-    end
-    
-    function getPositionX3()
-        local random = love.math.random(3)
+    -- get random x positions to obstacles  
+    function getPositionX()
+        local random = love.math.random(5)
         if random == 1 then
             return 200
         elseif random == 2 then
+            return 275
+        elseif random == 3 then
             return 350
+        elseif random == 4 then
+            return 425
         else
             return 500
         end
@@ -64,17 +59,23 @@ function love.load()
     obstacle = {}
     for i = 1, 5, 1 do
         if i <= 2 then
-            obstacle[i] = createElements(getPositionX2(), 150)
+            obstacle[i] = createElements(getPositionX(), -50)
         else
-            obstacle[i] = createElements(getPositionX3(), 300)
+            obstacle[i] = createElements(getPositionX(), -150)
         end
     end
-
+    
     gameState = 'start'
     score = 0
 end
 
-function love.update()
+function love.update(dt)
+
+    if gameState == 'play' then
+        for i = 1, 5, 1 do
+            obstacle[i].y = obstacle.y[i] + (1 / 10)
+        end
+    end
 
 end
 
@@ -101,5 +102,9 @@ function love.draw()
         love.graphics.printf('Press Esc', rightWall.x + 2, 75, WIDTH - rightWall.x, 'center')
     end
 
-    
+    if gameState == 'play' then
+        for i = 1, 5, 1 do
+        love.graphics.rectangle('fill', obstacle[i].x, obstacle[i].y, obstacle[i].width, obstacle[i].height)
+        end
+    end
 end
