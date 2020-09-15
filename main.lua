@@ -6,6 +6,7 @@ function love.load()
     font = love.graphics.newFont(30)
     love.graphics.setFont(font)
 
+    -- set width and height of game window
     love.window.setMode(WIDTH, HEIGHT, {resizable=false, vsync=false, fullscreen=false})
 
     -- function to create walls objects
@@ -72,6 +73,7 @@ function love.load()
     
     gameState = 'start'
     score = 0
+    dy = 1
 end
 
 function love.update(dt)
@@ -85,7 +87,6 @@ function love.update(dt)
         player.y < obstacle[i].y + obstacle[i].height and
         player.y + player.height > obstacle[i].y then
             gameState = 'gameOver'
-            createObstacle()
         end
     end
 
@@ -93,24 +94,31 @@ function love.update(dt)
         for i = 1, 10, 1 do
             obstacle[i].y = obstacle[i].y + (1 / 10)
         end
+        score = score + (1 / 660) * math.floor(dy)
+        dy = dy + (1 / 10000)
     end
 end
 
 function love.keypressed(key)
-    if key == 'enter' or key == 'return' then
+    if gameState == 'start' and (key == 'enter' or key == 'return') then
         gameState = 'play'
-    elseif key == 'space' then
+    elseif gameState == 'play' and key == 'space' then
         gameState = 'pause'
-    elseif key == 'escape' then
+    elseif gameState == 'pause' and key == 'space' then
+        gameState = 'play'
+    elseif gameState == 'gameOver' and  key == 'escape' then
         gameState = 'start'
+        createObstacle()
+        score = 0
+        dy = 1
     end
     if gameState == 'play' then
         if ((key == 'a' or key == 'left') and
         player.x > leftWall.x + player.width) then
-            player.x = player.x -75
+            player.x = player.x - 75
         elseif ((key == 'd' or key == 'right') and
         player.x + 100 < rightWall.x)  then
-            player.x = player.x +75
+            player.x = player.x + 75
         end
     end
 end
@@ -123,9 +131,9 @@ function love.draw()
     love.graphics.rectangle('fill', rightWall.x, rightWall.y, rightWall.width, rightWall.height)
 
     love.graphics.printf('Score', 0, 75, leftWall.x, 'center')
-    love.graphics.printf(score, 0, 125, leftWall.x, 'center')
+    love.graphics.printf(math.floor(score), 0, 125, leftWall.x, 'center')
 
-    if gameState == 'play' then
+    if gameState == 'play' or gameState == 'pause' then
         love.graphics.printf('Press Space', rightWall.x + 2, 75, WIDTH - rightWall.x, 'center')
     elseif gameState == 'start' then
         love.graphics.printf('Press Enter to start!', 0, 125, WIDTH, 'center')
@@ -136,7 +144,7 @@ function love.draw()
         love.graphics.printf('Press Esc', rightWall.x + 2, 75, WIDTH - rightWall.x, 'center')
     end
 
-    if gameState == 'play' then
+    if gameState == 'play' or gameState == 'pause' then
         for i = 1, 12, 1 do
         love.graphics.rectangle('fill', obstacle[i].x, obstacle[i].y, obstacle[i].width, obstacle[i].height)
         end
