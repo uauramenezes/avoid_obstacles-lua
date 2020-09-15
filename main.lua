@@ -98,7 +98,7 @@ function love.update(dt)
         for i = 1, 10, 1 do
             obstacle[i].y = obstacle[i].y + (dy / 15)
         end
-        score = score + (1 / 660)
+        score = score + (1 / 660) * math.floor(dy)
         dy = dy + (1 / 10000)
     end
 end
