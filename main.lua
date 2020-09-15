@@ -56,27 +56,48 @@ function love.load()
 
     player = createElements(WIDTH / 2 - 25, HEIGHT - 51, 1)
 
-    obstacle = {}
-    for i = 1, 5, 1 do
-        if i % 2 == 0 then
-            obstacle[i] = createElements(getPositionX(), -200)
-        else
-            obstacle[i] = createElements(getPositionX(), -50)
+    function createObstacle()
+        obstacle = {}
+        for i = 1, 10, 1 do
+            if i < 4 then
+                obstacle[i] = createElements(getPositionX(), -50)
+            elseif i < 6 then
+                obstacle[i] = createElements(getPositionX(), -200)
+            elseif i < 9 then
+                obstacle[i] = createElements(getPositionX(), -350)
+            else
+                obstacle[i] = createElements(getPositionX(), -500)
+            end
         end
+        return obstacle
     end
+
+    createObstacle()
     
     gameState = 'start'
     score = 0
 end
 
 function love.update(dt)
-
-    if gameState == 'play' then
-        for i = 1, 5, 1 do
-            obstacle[i].y = obstacle[i].y + (1 / 10)
+    for i = 1, 10, 1 do
+        if obstacle[i].y > HEIGHT then
+            obstacle[i].y = -50
+            obstacle[i].x = getPositionX()
+        end
+        if player.x < obstacle[i].x + obstacle[i].width and
+        player.x + player.width > obstacle[i].x and
+        player.y < obstacle[i].y + obstacle[i].height and
+        player.y + player.height > obstacle[i].y then
+            gameState = 'gameOver'
+            createObstacle()
         end
     end
 
+    if gameState == 'play' then
+        for i = 1, 10, 1 do
+            obstacle[i].y = obstacle[i].y + (1 / 10)
+        end
+    end
 end
 
 function love.keypressed(key)
@@ -85,7 +106,7 @@ function love.keypressed(key)
     elseif key == 'space' then
         gameState = 'pause'
     elseif key == 'escape' then
-        gameState = 'gameOver'
+        gameState = 'start'
     end
     if gameState == 'play' then
         if ((key == 'a' or key == 'left') and
@@ -120,7 +141,7 @@ function love.draw()
     end
 
     if gameState == 'play' then
-        for i = 1, 5, 1 do
+        for i = 1, 10, 1 do
         love.graphics.rectangle('fill', obstacle[i].x, obstacle[i].y, obstacle[i].width, obstacle[i].height)
         end
     end
