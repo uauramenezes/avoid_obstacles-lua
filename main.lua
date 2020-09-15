@@ -112,6 +112,9 @@ function love.keypressed(key)
         gameState = 'play'
     elseif gameState == 'gameOver' and  key == 'escape' then
         gameState = 'start'
+        createObstacle()
+        score = 0
+        dy = 1
     end
     if gameState == 'play' then
         if ((key == 'a' or key == 'left') and
