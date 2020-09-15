@@ -81,6 +81,7 @@ function love.update(dt)
         if obstacle[i].y > HEIGHT then
             obstacle[i].y = -50
             obstacle[i].x = getPositionX()
+            score = score + (1 / 3)
         end
         if player.x < obstacle[i].x + obstacle[i].width and
         player.x + player.width > obstacle[i].x and
@@ -91,10 +92,9 @@ function love.update(dt)
     end
 
     if gameState == 'play' then
-        for i = 1, 10, 1 do
-            obstacle[i].y = obstacle[i].y + (1 / 10)
+        for i = 1, 12, 1 do
+            obstacle[i].y = obstacle[i].y + (dy / 15)
         end
-        score = score + (1 / 660) * math.floor(dy)
         dy = dy + (1 / 10000)
     end
 end
@@ -131,7 +131,7 @@ function love.draw()
     love.graphics.rectangle('fill', rightWall.x, rightWall.y, rightWall.width, rightWall.height)
 
     love.graphics.printf('Score', 0, 75, leftWall.x, 'center')
-    love.graphics.printf(math.floor(score), 0, 125, leftWall.x, 'center')
+    love.graphics.printf(score, 0, 125, leftWall.x, 'center')
 
     if gameState == 'play' or gameState == 'pause' then
         love.graphics.printf('Press Space', rightWall.x + 2, 75, WIDTH - rightWall.x, 'center')
