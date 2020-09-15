@@ -58,10 +58,10 @@ function love.load()
 
     obstacle = {}
     for i = 1, 5, 1 do
-        if i <= 2 then
-            obstacle[i] = createElements(getPositionX(), -50)
+        if i % 2 == 0 then
+            obstacle[i] = createElements(getPositionX(), -200)
         else
-            obstacle[i] = createElements(getPositionX(), -150)
+            obstacle[i] = createElements(getPositionX(), -50)
         end
     end
     
@@ -73,13 +73,30 @@ function love.update(dt)
 
     if gameState == 'play' then
         for i = 1, 5, 1 do
-            obstacle[i].y = obstacle.y[i] + (1 / 10)
+            obstacle[i].y = obstacle[i].y + (1 / 10)
         end
     end
 
 end
 
-
+function love.keypressed(key)
+    if key == 'enter' or key == 'return' then
+        gameState = 'play'
+    elseif key == 'space' then
+        gameState = 'pause'
+    elseif key == 'escape' then
+        gameState = 'gameOver'
+    end
+    if gameState == 'play' then
+        if ((key == 'a' or key == 'left') and
+        player.x > leftWall.x + player.width) then
+            player.x = player.x -75
+        elseif ((key == 'd' or key == 'right') and
+        player.x + 100 < rightWall.x)  then
+            player.x = player.x +75
+        end
+    end
+end
 
 function love.draw()
     love.graphics.rectangle('fill', player.x, player.y, player.width, player.height)
