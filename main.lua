@@ -59,15 +59,11 @@ function love.load()
 
     function createObstacle()
         obstacle = {}
-        for i = 1, 10, 1 do
-            if i < 4 then
-                obstacle[i] = createElements(getPositionX(), -50)
-            elseif i < 6 then
-                obstacle[i] = createElements(getPositionX(), -200)
-            elseif i < 9 then
-                obstacle[i] = createElements(getPositionX(), -350)
-            else
-                obstacle[i] = createElements(getPositionX(), -500)
+        local yPos = -50
+        for i = 1, 12, 1 do
+            obstacle[i] = createElements(getPositionX(), yPos)
+            if i % 3 == 0 then
+                yPos = yPos - 150
             end
         end
         return obstacle
@@ -81,10 +77,11 @@ function love.load()
 end
 
 function love.update(dt)
-    for i = 1, 10, 1 do
+    for i = 1, 12, 1 do
         if obstacle[i].y > HEIGHT then
             obstacle[i].y = -50
             obstacle[i].x = getPositionX()
+            score = score + (1 / 3)
         end
         if player.x < obstacle[i].x + obstacle[i].width and
         player.x + player.width > obstacle[i].x and
@@ -95,10 +92,9 @@ function love.update(dt)
     end
 
     if gameState == 'play' then
-        for i = 1, 10, 1 do
+        for i = 1, 12, 1 do
             obstacle[i].y = obstacle[i].y + (dy / 15)
         end
-        score = score + (1 / 660) * math.floor(dy)
         dy = dy + (1 / 10000)
     end
 end
@@ -149,7 +145,7 @@ function love.draw()
     end
 
     if gameState == 'play' or gameState == 'pause' then
-        for i = 1, 10, 1 do
+        for i = 1, 12, 1 do
         love.graphics.rectangle('fill', obstacle[i].x, obstacle[i].y, obstacle[i].width, obstacle[i].height)
         end
     end
